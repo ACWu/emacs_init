@@ -12,3 +12,26 @@ dired ~
 ls
 find-file init.org
 find-file init.org
+cd .emacs.d
+ls
+find-file init.org
+find-file init.el
+cd .emacs.d
+ls
+find-file init.el
+cd .emacs.d
+ls
+find-file init.el
+cd .emacs.d
+find-file init.el
+cd .emacs.d
+ls
+find-file init.el
+find-file /dev/clipboard
+find-file /dev/clipboard
+cat /dev/clipboard
+/dev/clipboard > tocopy
+getclip > tocopy
+find-file tocopy
+ls
+find-file settings.org

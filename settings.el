@@ -1,8 +1,3 @@
-Literate emacs init file using org babel
-
-* Appearance
-
-#+BEGIN_SRC emacs-lisp
 
 (setq inhibit-splash-screen t)
 
@@ -14,6 +9,8 @@ Literate emacs init file using org babel
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+
+(menu-bar-mode -1)
 
 (org-babel-do-load-languages 
   'org-babel-load-languages
@@ -28,14 +25,6 @@ Literate emacs init file using org babel
      (scheme . t)
 ))
 
-
-#+END_SRC
-
-
-* Emacs custom
-
-#+BEGIN_SRC emacs-lisp
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -48,5 +37,3 @@ Literate emacs init file using org babel
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-#+END_SRC
