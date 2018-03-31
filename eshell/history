@@ -1,0 +1,14 @@
+ls
+vim init.el
+ls
+vim init.el
+vim init.el
+ls
+shell
+ls
+vim eshell
+ls
+dired ~
+ls
+find-file init.org
+find-file init.org
