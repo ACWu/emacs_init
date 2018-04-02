@@ -1,0 +1,15 @@
+(package-initialize nil)
+(add-to-list 'package-archives
+             '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/") t)
+(setq package-archive-priorities '(("org" . 3)
+                                   ("melpa" . 2)
+                                   ("gnu" . 1)))
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(setq use-package-verbose t)
+(eval-when-compile
+  (require 'use-package))
+(use-package diminish :ensure t)

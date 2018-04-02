@@ -35,3 +35,7 @@ getclip > tocopy
 find-file tocopy
 ls
 find-file settings.org
+/dev/clipboard > copyclip
+getclip > copyclip
+find-file copyclip
+find-file custom.el
