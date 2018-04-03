@@ -7,8 +7,7 @@
 (setq package-archive-priorities '(("org" . 3)
                                    ("melpa" . 2)
                                    ("gnu" . 1)))
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
+(unless (package-installed-p 'use-package)  (package-refresh-contents)
   (package-install 'use-package))
 (setq use-package-verbose t)
 (eval-when-compile
@@ -24,6 +23,10 @@
 (powerline-center-theme)
 
 (menu-bar-mode -1)
+
+(global-linum-mode t)
+
+(setq linum-format "%4d\u2502")
 
 (org-babel-do-load-languages 
   'org-babel-load-languages
@@ -42,6 +45,8 @@
 
    (setq org-support-shift-select t)
 
+   ;; Using Kaligule's fork of org-bullets due to issues the official melpa release has with org-hide as of 2018/04/01
+
    (add-to-list 'load-path "~/.emacs.d/vendor/org-bullets")
    (require 'org-bullets)
    (add-hook 'org-mode-hook (lambda() (org-bullets-mode 1)))
@@ -54,6 +59,8 @@
    (setq org-startup-indented t)
 
    (setq org-hide-leading-stars t))
+
+   (org-add-hook 'org-src-mode-hook 'linum-mode*)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)

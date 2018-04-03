@@ -39,3 +39,8 @@ find-file settings.org
 getclip > copyclip
 find-file copyclip
 find-file custom.el
+find-file vendor_packages
+cd vendor
+ls
+cd ..
+ls
