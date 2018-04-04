@@ -4,8 +4,14 @@
              '("org" . "http://orgmode.org/elpa/"))
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
-(setq package-archive-priorities '(("org" . 3)
-                                   ("melpa" . 2)
+(add-to-list 'package-archives
+             '("marmalade" . "https://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("tromey" . "http://tromey.com/elpa/") t)
+(setq package-archive-priorities '(("org" . 5)
+                                   ("melpa" . 4)
+                                   ("marmalade" . 3)
+                                   ("tromey" . 2)
                                    ("gnu" . 1)))
 (unless (package-installed-p 'use-package)  (package-refresh-contents)
   (package-install 'use-package))
@@ -28,24 +34,11 @@
 
 (setq linum-format "%4d\u2502")
 
-(org-babel-do-load-languages 
-  'org-babel-load-languages
-  '( (perl . t)
-     (ruby . t)
-     (sh . t)
-     (python . t)
-     (emacs-lisp . t)
-     (R . t)
-     (haskell . t)
-     (clojure . t)
-     (scheme . t)
-))
-
 (with-eval-after-load 'org
 
    (setq org-support-shift-select t)
 
-   ;; Using Kaligule's fork of org-bullets due to issues the official melpa release has with org-hide as of 2018/04/01
+   ;; Use Kaligule's fork of org-bullets due to issues the official melpa release has with org-hide as of 2018/04/01
 
    (add-to-list 'load-path "~/.emacs.d/vendor/org-bullets")
    (require 'org-bullets)
@@ -54,13 +47,27 @@
    ;; (use-package org-bullets
    ;;   :ensure t
    ;;   :commands (org-bullets-mode)
-   ;;   :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+   ;;   :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
    (setq org-startup-indented t)
 
    (setq org-hide-leading-stars t))
 
    (org-add-hook 'org-src-mode-hook 'linum-mode*)
+
+   (org-babel-do-load-languages 
+      'org-babel-load-languages
+      '( (perl . t)
+         (ruby . t)
+         (sh . t)
+         (python . t)
+         (emacs-lisp . t)
+         (R . t)
+         (haskell . t)
+         (clojure . t)
+         (scheme . t)
+    )
+)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
