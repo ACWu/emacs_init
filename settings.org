@@ -3,7 +3,7 @@ Literate Emacs init file using org babel
 * Packages
 
 #+BEGIN_SRC emacs-lisp
-(package-initialize nil)
+(require 'package)
 (add-to-list 'package-archives
              '("org" . "http://orgmode.org/elpa/"))
 (add-to-list 'package-archives
@@ -17,12 +17,53 @@ Literate Emacs init file using org babel
                                    ("marmalade" . 3)
                                    ("tromey" . 2)
                                    ("gnu" . 1)))
-(unless (package-installed-p 'use-package)  (package-refresh-contents)
-  (package-install 'use-package))
-(setq use-package-verbose t)
-(eval-when-compile
-  (require 'use-package))
-(use-package diminish :ensure t)
+
+; list the packages to use
+(setq package-list
+   '(
+   company
+   concurrent
+   ctable
+   deferred 
+   elpy
+   epc 
+   flycheck cyberpunk-theme elpy find-file-in-project
+   
+   exec-path-from-shell auto-complete let-alist git-rebase-mode git-commit-mode 
+   haskell-mode
+   highlight-indentation
+   iedit
+   jedi
+   magit
+   minimap
+   popup
+   pyenv
+   python-environment
+   sql
+   sql-indent
+   yasnippet
+   ))
+
+; activate all the packages
+(package initialize)
+
+; fetch the list of packages available
+(unless package-archive-contents (package-refresh-contents))
+
+; install missing packages
+(dolist (package package-list)
+   (unless (package-installed-p package)
+      (package-install package)))
+
+;; (unless (package-installed-p 'use-package)  (package-refresh-contents)
+;;  (package-install 'use-package))
+;; (setq use-package-verbose t)
+;; (eval-when-compile
+;;  (require 'use-package))
+;; (use-package diminish :ensure t)
+
+
+
 #+END_SRC
 
 
