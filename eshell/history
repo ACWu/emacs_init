@@ -44,3 +44,18 @@ cd vendor
 ls
 cd ..
 ls
+ls
+cd quick-project1
+ls
+ls
+python server.py
+ls
+cd vendor
+ls
+cd powerline/
+ls
+ls
+ls
+ls
+git push origin
+git branch

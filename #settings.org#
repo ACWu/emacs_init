@@ -1,0 +1,162 @@
+ccLiterate Emacs init file using org babel
+
+* Packages
+
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+(add-to-list 'package-archives
+             '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives
+             '("melpa" . "http://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("marmalade" . "https://marmalade-repo.org/packages/"))
+;(add-to-list 'package-archives
+;             '("tromey" . "http://tromey.com/elpa/") t)
+;(setq package-archive-priorities '(("org" . 4)
+;                                   ("melpa" . 4)
+;                                   ("marmalade" . 3)
+;                                   ("tromey" . 2)
+;                                   ("gnu" . 1)))
+
+; list the packages to use
+(setq package-list
+   '(
+   ;;company
+   ;;concurrent
+   ;;ctable
+   ;;deferred 
+   ;;elpy
+   ;;epc 
+   ;;evil
+   ;;flycheck cyberpunk-theme elpy find-file-in-project
+   
+   ;;exec-path-from-shell auto-complete let-alist git-rebase-mode git-commit-mode 
+   geiser 
+   haskell-mode
+   ;;highlight-indentation
+   ;;iedit
+   ;;jedi
+   markdown-mode
+   magit
+   ;;minimap
+   paredit
+   ;;popup
+   ;;pyenv
+   python-environment
+   slime
+   ;;sql
+   ;;sql-indent
+   yasnippet
+   smart-mode-line
+   ))
+
+; activate all the packages
+(package-initialize)
+
+; fetch the list of packages available
+(unless package-archive-contents (package-refresh-contents))
+
+; install missing packages
+(dolist (package package-list)
+   (unless (package-installed-p package)
+      (package-install package)))
+
+;; (unless (package-installed-p 'use-package)  (package-refresh-contents)
+;;  (package-install 'use-package))
+;; (setq use-package-verbose t)
+;; (eval-when-compile
+;;  (require 'use-package))
+;; (use-package diminish :ensure t)
+
+(add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
+(add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))
+(setq inferior-lisp-program "/data/data/com.termux/files/home/.nix-profile/bin/sbcl")
+;;(evil-mode 1)
+
+#+END_SRC
+
+
+* Appearance
+
+#+BEGIN_SRC emacs-lisp
+
+(setq inhibit-splash-screen t)
+
+(global-visual-line-mode t)
+
+(global-hl-line-mode t)
+
+(show-paren-mode t)
+(setq show-paren-delay 0)
+(set-face-attribute 'mode-line nil  :height 500)
+;;(add-to-list 'load-path "/data/data/com.termux/files/home/.emacs.d/vendor/powerline")
+;;(require 'powerline)
+;;(powerline-center-theme)
+
+(menu-bar-mode -1)
+
+(global-linum-mode t)
+
+(setq linum-format "%4d\u2502")
+
+(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+
+
+#+END_SRC
+
+
+* Org 
+
+#+BEGIN_SRC emacs-lisp -n
+  (setq evil-want-C-i-jump nil)
+
+  (with-eval-after-load 'org
+
+     (setq org-support-shift-select t)
+
+     ;; Use Kaligule's fork of org-bullets due to issues the official melpa release has with org-hide as of 2018/04/01
+
+     ;;(add-to-list 'load-path "/data/data/com.termux/files/home/.emacs.d/vendor/org-bullets")
+     ;;(require 'org-bullets)
+     ;;(add-hook 'org-mode-hook (lambda() (org-bullets-mode 1)))
+
+     ;; (use-package org-bullets
+     ;;   :ensure t
+     ;;   :commands (org-bullets-mode)
+     ;;   :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+     (setq org-startup-indented t)
+     (setq org-startup-folded t)
+     (setq org-hide-leading-stars t))
+
+     (org-add-hook 'org-src-mode-hook 'linum-mode*)
+
+     (org-babel-do-load-languages 
+        'org-babel-load-languages
+        '( (perl . t)
+           (ruby . t)
+           (shell . t)
+           (python . t)
+           (emacs-lisp . t)
+           (R . t)
+           (haskell . t)
+           (clojure . t)
+           (scheme . t)
+      )
+     )
+
+
+#+END_SRC
+
+
+* Emacs Custom
+Direct Emacs to use custom.el for storing customized settings instead of init.el.
+
+#+BEGIN_SRC emacs-lisp
+
+(setq custom-file "/data/data/com.termux/files/home/.emacs.d/custom.el")
+(load custom-file)
+
+#+END_SRC
+
+

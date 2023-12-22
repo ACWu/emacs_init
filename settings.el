@@ -1,38 +1,158 @@
+(require 'package)
+(add-to-list 'package-archives
+	     '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives
+	     '("melpa" . "http://melpa.org/packages/") t)
+;(add-to-list 'package-archives
+;	       '("marmalade" . "https://marmalade-repo.org/packages/"))
+;(add-to-list 'package-archives
+;             '("tromey" . "http://tromey.com/elpa/") t)
+(setq package-archive-priorities '(("org" . 4)
+;				     ("melpa" . 2)
+				   ("marmalade" . 3)
+;                                   ("tromey" . 2)
+				   ("gnu" . 1)))
 
-(package-initialize nil)
-(add-to-list 'package-archives
-             '("org" . "http://orgmode.org/elpa/"))
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives
-             '("marmalade" . "https://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
-             '("tromey" . "http://tromey.com/elpa/") t)
-(setq package-archive-priorities '(("org" . 5)
-                                   ("melpa" . 4)
-                                   ("marmalade" . 3)
-                                   ("tromey" . 2)
-                                   ("gnu" . 1)))
-(unless (package-installed-p 'use-package)  (package-refresh-contents)
-  (package-install 'use-package))
-(setq use-package-verbose t)
-(eval-when-compile
-  (require 'use-package))
-(use-package diminish :ensure t)
+; list the packages to use
+(setq package-list
+   '(
+   company
+   ;;concurrent
+   ;;ctable
+   ;;deferred 
+   ;;elpy
+   epc 
+   ;;evil
+   ;;flycheck cyberpunk-theme elpy find-file-in-project
+
+   ;;exec-path-from-shell auto-complete let-alist git-rebase-mode git-commit-mode 
+   geiser 
+   haskell-mode
+   ;;highlight-indentation
+   hyperbole
+   iedit
+   ;;jedi
+   markdown-mode
+   magit
+   ;;minimap
+   paredit
+   pdf-tools
+   ;;popup
+   ;;pyenv
+   python-environment
+   slime
+   ;;sql
+   ;;sql-indent
+   vertico
+   yasnippet
+   which-key
+   smart-mode-line
+   ))
+
+; activate all the packages
+(package-initialize)
+
+; fetch the list of packages available
+(unless package-archive-contents (package-refresh-contents))
+
+; install missing packages
+(dolist (package package-list)
+   (unless (package-installed-p package)
+      (package-install package)))
+
+;; (unless (package-installed-p 'use-package)  (package-refresh-contents)
+;;  (package-install 'use-package))
+;; (setq use-package-verbose t)
+;; (eval-when-compile
+;;  (require 'use-package))
+;; (use-package diminish :ensure t)
+
+(add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
+(add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))
+(setq inferior-lisp-program "/data/data/com.termux/files/home/.nix-profile/bin/sbcl")
+;;(evil-mode 1)
+(hyperbole-mode 1)
+(require 'iedit)
+(require 'yasnippet)
+(yas-global-mode 1)
+
+;; Enable vertico
+(use-package vertico
+  :init
+  (vertico-mode)
+
+  ;; Different scroll margin
+  ;; (setq vertico-scroll-margin 0)
+
+  ;; Show more candidates
+  (setq vertico-count 20)
+
+  ;; Grow and shrink the Vertico minibuffer
+  (setq vertico-resize t)
+
+  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+  (setq vertico-cycle t)
+  )
+
+;; Persist history over Emacs restarts. Vertico sorts by history position.
+(use-package savehist
+  :init
+  (savehist-mode))
+
+;; A few more useful configurations...
+(use-package emacs
+  :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+		  (replace-regexp-in-string
+		   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+		   crm-separator)
+		  (car args))
+	  (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+	'(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+  ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+  ;; Vertico commands are hidden in normal buffers.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable recursive minibuffers
+  (setq enable-recursive-minibuffers t))
+
+  ;; for which-key
+  (add-to-list 'load-path "path/to/which-key.el")
+  (require 'which-key)
+  (which-key-mode)
 
 (setq inhibit-splash-screen t)
 
 (global-visual-line-mode t)
 
-(add-to-list 'load-path "~/.emacs.d/vendor/powerline")
-(require 'powerline)
-(powerline-center-theme)
+(global-hl-line-mode t)
+
+(show-paren-mode t)
+(setq show-paren-delay 0)
+(set-face-attribute 'mode-line nil  :height 500)
+;;(add-to-list 'load-path "/data/data/com.termux/files/home/.emacs.d/vendor/powerline")
+;;(require 'powerline)
+;;(powerline-center-theme)
 
 (menu-bar-mode -1)
 
-(global-linum-mode t)
+;;(global-linum-mode t)
 
 (setq linum-format "%4d\u2502")
+
+(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+
+(setq evil-want-C-i-jump nil)
 
 (with-eval-after-load 'org
 
@@ -40,9 +160,9 @@
 
    ;; Use Kaligule's fork of org-bullets due to issues the official melpa release has with org-hide as of 2018/04/01
 
-   (add-to-list 'load-path "~/.emacs.d/vendor/org-bullets")
-   (require 'org-bullets)
-   (add-hook 'org-mode-hook (lambda() (org-bullets-mode 1)))
+   ;;(add-to-list 'load-path "/data/data/com.termux/files/home/.emacs.d/vendor/org-bullets")
+   ;;(require 'org-bullets)
+   ;;(add-hook 'org-mode-hook (lambda() (org-bullets-mode 1)))
 
    ;; (use-package org-bullets
    ;;   :ensure t
@@ -50,7 +170,7 @@
    ;;   :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
    (setq org-startup-indented t)
-
+   (setq org-startup-folded t)
    (setq org-hide-leading-stars t))
 
    (org-add-hook 'org-src-mode-hook 'linum-mode*)
@@ -59,7 +179,7 @@
       'org-babel-load-languages
       '( (perl . t)
          (ruby . t)
-         (sh . t)
+         (shell . t)
          (python . t)
          (emacs-lisp . t)
          (R . t)
@@ -67,7 +187,7 @@
          (clojure . t)
          (scheme . t)
     )
-)
+   )
 
-(setq custom-file "~/.emacs.d/custom.el")
+(setq custom-file "/data/data/com.termux/files/home/.emacs.d/custom.el")
 (load custom-file)
